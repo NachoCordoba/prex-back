@@ -1,18 +1,18 @@
-import express, { Express, Request, Response } from "express";
-import bodyParser from "body-parser";
 import dotenv from 'dotenv';
+import Server from './lib/server/server';
+import Database from './lib/database/database';
+import userRoutes from './modules/user/user.routes';
+import authRoutes from './modules/auth/auth.routes';
+dotenv.config();
 
-dotenv.config()
+Database
+    .getInstance()
+    .getDataSource()
+    .initialize();
 
-const app: Express = express();
-const port = process.env.PORT;
-
-app.use(bodyParser.json())
-
-app.get('/', (req: Request, res: Response) => {
-    res.send('Express Up!')
-})
-
-app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-})
+Server
+    .getInstance()
+    .configure()
+    .applyRoutes(authRoutes)
+    .applyRoutes(userRoutes)
+    .listen();

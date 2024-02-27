@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import dataSource from "../../config/dataSource";
+import Logger from "../logger/logger";
 
 export default class Database {
     private static instance: Database;
@@ -8,7 +9,10 @@ export default class Database {
     private constructor() {
         this.dataSourceInstance = dataSource;
         this.dataSourceInstance.initialize().then(() => {
-            console.log(`[database]: Connected!`);
+            Logger.getInstance().info({
+                module: 'DATABASE',
+                msg: 'Im connected!'
+            })
         });
     }
 
