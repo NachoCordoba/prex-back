@@ -1,8 +1,13 @@
 import express, { Express, Request, Response } from "express";
 import bodyParser from "body-parser";
 import dotenv from 'dotenv';
-
 dotenv.config()
+import "reflect-metadata";
+import dataSource from "./config/dataSource";
+
+dataSource.initialize().then(()=>{
+    console.log(`[database]: Connected!`);
+});
 
 const app: Express = express();
 const port = process.env.PORT;
