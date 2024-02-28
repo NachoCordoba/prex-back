@@ -42,11 +42,11 @@ export default class AttachmentService extends CommonService<AttachmentEntity> {
     async save(entities: any, options?: SaveOptions): Promise<any> {
         if(Array.isArray(entities))
             return entities.map(async (entity) => {
-                // await this.upload(entity.file);
+                await this.upload(entity.file);
                 return super.save(entity, options);
             })
         
-        // await this.upload(entities.file);
+        await this.upload(entities.file);
         return super.save(entities, options);
     }
 
