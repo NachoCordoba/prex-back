@@ -53,3 +53,5 @@ http://localhost:3000/api-docs/
 - Refactor
 - Postman env vars
 - Documentation fix
+- Estaría bueno dejar de usar singleton para los controller, ver de abstract factory / factory tal vez uniendolo con el singleton para la construccion de los modulos.
+- Inyeccion de dependencia a traves de modulos, deberia modificar los services para que sean inyectables en otros modulos, sin una dependencia directa.
