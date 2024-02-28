@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 import Server from './lib/server/server';
 import Database from './lib/database/database';
-import userRoutes from './modules/user/user.routes';
 import authRoutes from './modules/auth/auth.routes';
+import attachmentRoute from './modules/attachment/attachment.routes';
+import doc from './doc/doc';
+
 dotenv.config();
 
 Database
@@ -14,5 +16,6 @@ Server
     .getInstance()
     .configure()
     .applyRoutes(authRoutes)
-    .applyRoutes(userRoutes)
+    .applyRoutes(attachmentRoute)
+    .applyRoutes(doc)
     .listen();

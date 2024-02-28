@@ -5,11 +5,10 @@ import UserAuthDTO from "./dto/userAuth.dto";
 import AccessTokenDTO from "./dto/accessToken.dto";
 import SigninDTO from "./dto/signin.dto";
 import * as bcrypt from 'bcryptjs';
+import UnathorizedExpection from "../../lib/exception/authorization.exception";
 
 export default class AuthService {
-    private userService: UserService = new UserService();
-
-    constructor(){}
+    constructor(private userService: UserService = new UserService()){}
 
     async signup(newUser: SignupDTO): Promise<AccessTokenDTO> {
        const user = await this.userService.save({
@@ -27,9 +26,9 @@ export default class AuthService {
             where: { email: credentials.email }
         });
 
-        if(!user) throw new Error('No existe.');
+        if(!user) throw new UnathorizedExpection()
         if(!bcrypt.compareSync(credentials.password, user.password))
-            throw new Error('No existe.')
+            throw new UnathorizedExpection();
         
         return {
             token: this.generateAccessToken(user)
