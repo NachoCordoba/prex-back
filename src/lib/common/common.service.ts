@@ -1,4 +1,4 @@
-import { DeepPartial, FindManyOptions, FindOneOptions, Repository, SaveOptions } from "typeorm";
+import { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectId, Repository, SaveOptions } from "typeorm";
 import CommonEntity from "./common.entity";
 
 export const DEFAULT_TAKE = 25;
@@ -35,5 +35,9 @@ export default abstract class CommonService<T extends CommonEntity> {
             results: findResult[0],
             count: findResult[1]
         }
+    }
+
+    public delete(criteria: string | number | Date | ObjectId | string[] | number[] | Date[] | ObjectId[] | FindOptionsWhere<T>){
+        return this.repository.softDelete(criteria);
     }
 }
