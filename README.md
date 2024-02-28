@@ -48,6 +48,8 @@ http://localhost:3000/api-docs/
 
 # To Do
 - Diagrama del sistema
-- TDD
 - Descargar archivos
+- Unit Testing (Más casos de pruebas)
 - Refactor
+- Postman env vars
+- Documentation fix
