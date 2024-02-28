@@ -3,15 +3,12 @@ import AuthService from "./auth.service";
 import SignupDTO from "./dto/signup.dto";
 import { validateOrReject } from "class-validator";
 import SigninDTO from "./dto/signin.dto";
+import HttpPostException from "../../lib/exception/httpPost.exception";
 
 export default class AuthController {
     private static instance: AuthController;
-    private authService: AuthService;
-
-    private constructor(){
-        this.authService = new AuthService();
-    }
-
+    
+    private constructor(private authService: AuthService = new AuthService()){}
 
     public static getInstance(): AuthController {
         if(!this.instance)
@@ -28,9 +25,8 @@ export default class AuthController {
             res.status(201);
             res.send(signupUser);
         }
-        catch(err){
-            res.status(400)
-            res.send(err)
+        catch(err: any){
+            new HttpPostException(err).toHttpResponse(res);
         }
     }
 
@@ -42,9 +38,8 @@ export default class AuthController {
             res.status(200);
             res.send(signinUser);
         }
-        catch(err){
-            res.status(400);
-            res.send(err);
+        catch(err: any){
+            new HttpPostException(err).toHttpResponse(res);
         }
     }
 }

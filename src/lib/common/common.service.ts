@@ -3,7 +3,7 @@ import CommonEntity from "./common.entity";
 
 export const DEFAULT_TAKE = 25;
 
-export default class CommonService<T extends CommonEntity> {
+export default abstract class CommonService<T extends CommonEntity> {
     constructor(private repository: Repository<T>){}
 
     public findOne(options: FindOneOptions<T>): Promise<T | null>{

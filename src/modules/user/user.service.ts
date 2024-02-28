@@ -1,14 +1,13 @@
-import { FindOneOptions, SaveOptions } from "typeorm";
+import { SaveOptions } from "typeorm";
 import UserRepository from "./user.repository";
 import UserDTO from "./dto/user.dto";
 import CreateUserDTO from "./dto/createUser.dto";
 import * as bcrypt from 'bcryptjs';
 import UserEntity from "./user.entity";
 import CommonService from "../../lib/common/common.service";
+import { validateOrReject } from "class-validator";
 
 export default class UserService extends CommonService<UserEntity> {
-    
-
     constructor(private userRepository: UserRepository = new UserRepository()){
         super(userRepository);
     }

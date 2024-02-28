@@ -4,7 +4,7 @@ import CommonEntity from "../../lib/common/common.entity";
 @Entity('user')
 export default class UserEntity extends CommonEntity {
     @Column({
-        nullable: false
+        nullable: false,
     })
     userName: string;
 
