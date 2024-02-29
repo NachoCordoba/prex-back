@@ -11,9 +11,9 @@ export default class AttachmentEntity extends CommonEntity {
     
     @ManyToOne(() => UserEntity, user => user.attachments, { nullable: false })
     @JoinColumn()
-    user: UserEntity;
+    user?: UserEntity;
 
     @ManyToMany(() => UserEntity, user => user.sharedMe)
     @JoinTable()
-    sharedTo: UserEntity[];
+    sharedTo?: UserEntity[];
 }

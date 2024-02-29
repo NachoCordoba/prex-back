@@ -35,16 +35,7 @@ export default class AttachmentController {
                 createdBy: (req['user'] as UserDTO).email
             });       
             res.status(HttpStatusCode.OK);
-            res.send({
-                attachment: savedFile.attachment,
-                user: savedFile.user,
-                createdBy: savedFile.createdBy,
-                lastModifiedBy: savedFile.lastModifiedBy,
-                id: savedFile.id,
-                createdDate: savedFile.createdDate,
-                lastModifiedDate: savedFile.lastModifiedBy,
-                deleteDate: savedFile.deleteDate,
-            });
+            res.send(savedFile);
         }
         catch(err: any){
             new HttpPostException(err).toHttpResponse(res);

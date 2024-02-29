@@ -8,6 +8,7 @@
 - AttachmentModule
   - Upload files
   - Share & Update files
+  - Download
   - Get files
   - Delete files
 - Dockerfile
@@ -83,14 +84,14 @@ Workspace: https://www.postman.com/ignacord/workspace/prex
 http://localhost:3000/api-docs/
 
 # To Do
-- Unit Testing (Más casos de pruebas)
+- Typeorm Transactions: Rollback on fail file upload / update / delete
+- Hidden user password with class-transfomer
 - Diagrama del sistema
 - Supertest (E2E Testing)
-- Refactor
+- Refactor (Red - Green)
 - Postman env vars
 - Documentation fix
 - Estaría bueno dejar de usar singleton para los controller, ver de abstract factory / factory tal vez uniendolo con el singleton para la construccion de los modulos.
-- Inyeccion de dependencia a traves de modulos, deberia modificar los services para que sean inyectables en otros modulos, sin una dependencia directa.
 - engines support:
 
 ```json
