@@ -1,10 +1,12 @@
-import { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectId, Repository, SaveOptions } from "typeorm";
+import { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectId, SaveOptions } from "typeorm";
 import CommonEntity from "./common.entity";
+import ICommonRepository from "./interface/common.repository.interface";
+import ICommonService from "./interface/common.service.interface";
 
 export const DEFAULT_TAKE = 25;
 
-export default abstract class CommonService<T extends CommonEntity> {
-    constructor(private repository: Repository<T>){}
+export default class CommonService<T extends CommonEntity> implements ICommonService<T> {
+    constructor(private repository: ICommonRepository<T>){}
 
     public findOne(options: FindOneOptions<T>): Promise<T | null>{
         return this.repository.findOne(options);
@@ -20,11 +22,12 @@ export default abstract class CommonService<T extends CommonEntity> {
         return this.repository.findAndCount(options);
     }
 
-    public async list(page: number = 0, options?: FindManyOptions<T>): Promise<{
+    public async list(options: { page: number } & FindManyOptions<T> = { page: 0}): Promise<{
         results: T[],
         count: number
     }>{
-        const forcedOptions : FindManyOptions<T> = { ...options };
+        const { page, ...extractedOptions } = options;
+        const forcedOptions : FindManyOptions<T> = { ...extractedOptions };
 
         if(!forcedOptions.take) forcedOptions.take = DEFAULT_TAKE;
         if(!forcedOptions.skip) forcedOptions.skip = page * DEFAULT_TAKE;
@@ -37,7 +40,7 @@ export default abstract class CommonService<T extends CommonEntity> {
         }
     }
 
-    public delete(criteria: string | number | Date | ObjectId | string[] | number[] | Date[] | ObjectId[] | FindOptionsWhere<T>){
+    public delete(criteria: string | string[] | ObjectId | ObjectId[] | FindOptionsWhere<T>){
         return this.repository.softDelete(criteria);
     }
 }

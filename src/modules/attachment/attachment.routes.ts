@@ -89,4 +89,8 @@ attachmentRoutes.get('/', (req: Request, res: Response) => AttachmentController.
  *         description: Successfully Deleted
  */
 attachmentRoutes.delete('/:id', (req: Request, res: Response) => AttachmentController.getInstance().delete(req, res));
+
+
+attachmentRoutes.get('/:id/download', (req: Request, res: Response) => AttachmentController.getInstance().download(req, res));
+
 export default express.Router().use('/attachment', authMiddleware, attachmentRoutes);

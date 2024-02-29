@@ -1,4 +1,3 @@
-import { ListBucketsCommand, S3Client } from "@aws-sdk/client-s3";
 import CommonService from "../../lib/common/common.service";
 import AttachmentEntity from "./attachment.entity";
 import AttachmentRepository from "./attachment.repository";
@@ -6,31 +5,30 @@ import CreateAttachmentDTO from './dto/createAttachment.dto';
 import AttachmentDTO from "./dto/attachment.dto";
 import { SaveOptions } from "typeorm";
 import UpdateAttachmentDTO from "./dto/updateAttachment.dto";
+import FileSystem from "../../lib/fileSystem/fileSystem";
+import IAttachmentService from "./interface/attachment.service.interface";
+import { AWSError, S3 } from "aws-sdk";
+import { PromiseResult } from "aws-sdk/lib/request";
+import IAttachmentRepository from "./interface/attachment.repository.interface";
 
-export default class AttachmentService extends CommonService<AttachmentEntity> {
-    constructor(private attachmentRepository: AttachmentRepository = new AttachmentRepository){
+
+export default class AttachmentService extends CommonService<AttachmentEntity> implements IAttachmentService{
+    constructor(private attachmentRepository: IAttachmentRepository = new AttachmentRepository()){
         super(attachmentRepository);
     }
 
-    async upload(file: Express.Multer.File){
+    async upload(file: Express.Multer.File): Promise<void>{
         try{
-            const s3 = new S3Client({
-                credentials: {
-                    accessKeyId: String(process.env.AWS_KEY), 
-                    secretAccessKey: String(process.env.AWS_SECRET)
-                },
-                region: process.env.BUCKET_REGION
-            })
-            
-            const params = {
-                Bucket: process.env.BUCKET_NAME,
-                Key: file.originalname,
-                Body: file.buffer,
-            };
-    
-            const command = new ListBucketsCommand(params);
-            await s3.send(command)
-            s3.destroy();
+            await FileSystem.upload({ name: file.originalname, buffer: file.buffer })
+        }
+        catch(err){
+            throw err;
+        }
+    }
+
+    async download(fileName: string): Promise<PromiseResult<S3.GetObjectOutput, AWSError>>{
+        try{
+            return await FileSystem.download(fileName)
         }
         catch(err){
             throw err;
@@ -43,11 +41,19 @@ export default class AttachmentService extends CommonService<AttachmentEntity> {
         if(Array.isArray(entities))
             return entities.map(async (entity) => {
                 await this.upload(entity.file);
-                return super.save(entity, options);
+                return super.save({
+                    attachment: entity.attachment,
+                    user: entity.user,
+                    createdBy: entity.createdBy
+                }, options);
             })
         
         await this.upload(entities.file);
-        return super.save(entities, options);
+        return this.attachmentRepository.save({
+            attachment: entities.attachment,
+            user: entities.user,
+            createdBy: entities.createdBy
+        }, options);
     }
 
     async update(entities: UpdateAttachmentDTO[], options?: SaveOptions) : Promise<AttachmentDTO[]>
@@ -58,10 +64,10 @@ export default class AttachmentService extends CommonService<AttachmentEntity> {
                 return super.save(entity, options);
             })
         
-        return super.save(entities, options);
+        return this.attachmentRepository.save(entities, options);
     }
 
     async delete(id: string){
-        return super.delete(id);
+        return this.attachmentRepository.softDelete(id);
     }
 }

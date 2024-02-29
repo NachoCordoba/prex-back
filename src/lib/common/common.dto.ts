@@ -2,7 +2,7 @@ export default class CommonDTO {
     id: string;
     createdBy: string;
     createdDate: Date;
-    lastModifiedDate: Date;
+    lastModifiedDate: Date | null;
     lastModifiedBy: string;
-    deleteDate: Date;
+    deleteDate: Date | null;
 }

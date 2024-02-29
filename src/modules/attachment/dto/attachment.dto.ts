@@ -25,6 +25,6 @@ import UserDTO from "../../user/dto/user.dto";
  */
 export default class AttachmentDTO extends CommonDTO {
     attachment: string;
-    user: UserDTO;
-    sharedTo: UserDTO[];
+    user?: UserDTO;
+    sharedTo?: UserDTO[];
 }

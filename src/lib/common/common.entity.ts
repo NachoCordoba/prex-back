@@ -15,7 +15,7 @@ export default class CommonEntity {
     createdDate: Date;
     
     @UpdateDateColumn()
-    lastModifiedDate: Date;
+    lastModifiedDate: Date | null;
     
     @Column({
         nullable: true,
@@ -23,5 +23,5 @@ export default class CommonEntity {
     lastModifiedBy: string;
     
     @DeleteDateColumn()
-    deleteDate: Date;
+    deleteDate: Date | null;
 }

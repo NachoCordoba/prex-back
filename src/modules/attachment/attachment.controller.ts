@@ -9,6 +9,7 @@ import UpdateAttachmentDTO from "./dto/updateAttachment.dto";
 import { validateOrReject } from "class-validator";
 import HttpGetException from '../../lib/exception/httpGet.exception';
 import HttpDeleteException from '../../lib/exception/httpDelete.exception';
+import { Readable } from "stream";
 
 export default class AttachmentController {
     private static instance: AttachmentController;
@@ -34,16 +35,7 @@ export default class AttachmentController {
                 createdBy: (req['user'] as UserDTO).email
             });       
             res.status(HttpStatusCode.OK);
-            res.send({
-                attachment: savedFile.attachment,
-                user: savedFile.user,
-                createdBy: savedFile.createdBy,
-                lastModifiedBy: savedFile.lastModifiedBy,
-                id: savedFile.id,
-                createdDate: savedFile.createdDate,
-                lastModifiedDate: savedFile.lastModifiedBy,
-                deleteDate: savedFile.deleteDate,
-            });
+            res.send(savedFile);
         }
         catch(err: any){
             new HttpPostException(err).toHttpResponse(res);
@@ -70,12 +62,67 @@ export default class AttachmentController {
         }
     }
 
+    async get(req: Request, res: Response){
+        try{
+            const attachment = await this.attachmentService.findOne({
+                where: {
+                    id: req.params.id,
+                    user: { id: (req['user'] as UserDTO).id }
+                }
+            })
+
+            if(!attachment) throw new AuthorizationException();
+            res.status(HttpStatusCode.OK);
+            res.send(attachment);
+        }
+        catch(err: any){
+            new HttpGetException(err).toHttpResponse(res);
+        }
+    }
+
+    async download(req: Request, res: Response){
+        try{
+            const attachment = await this.attachmentService.findOne({
+                where: {
+                    id: req.params.id,
+                    user: { id: (req['user'] as UserDTO).id }
+                }
+            })
+
+            if(!attachment) throw new AuthorizationException();
+            const file = await this.attachmentService.download(attachment.attachment)
+            
+            if (!file) {
+                res.status(404).send('File not found');
+                return;
+            }
+            
+            res
+                .set("Content-Length", file.ContentLength?.toString())
+                .set("Content-Type",file.ContentType)
+                .set("Content-Disposition", `attachment; filename="${attachment.attachment}"`)
+                .status(HttpStatusCode.OK);
+            
+            const readableStream = new Readable();
+            readableStream._read = () => {};
+            readableStream.push(file.Body);
+            readableStream.push(null);
+            readableStream.pipe(res);
+        }
+        catch(err: any){
+            new HttpGetException(err).toHttpResponse(res);
+        }
+    }
+
     async list(req: Request, res: Response){
         try{
-            const attachmentList = await this.attachmentService.list(Number(req.query.page || 0), { where: [
+            const attachmentList = await this.attachmentService.list({ 
+                where: [
                 { user: { id: (req['user'] as UserDTO).id }},
                 { sharedTo: { id: (req['user'] as UserDTO).id }}
-            ]})
+                ],
+                page: Number(req.query.page)
+            })
 
             res.status(HttpStatusCode.OK)
             res.send(attachmentList)

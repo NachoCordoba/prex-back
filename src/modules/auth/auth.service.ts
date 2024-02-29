@@ -1,4 +1,5 @@
 import UserService from "../user/user.service";
+import IUserService from "../user/interface/user.service.interface";
 import SignupDTO from "./dto/signup.dto";
 import jwt from 'jsonwebtoken';
 import UserAuthDTO from "./dto/userAuth.dto";
@@ -8,7 +9,7 @@ import * as bcrypt from 'bcryptjs';
 import UnathorizedExpection from "../../lib/exception/authorization.exception";
 
 export default class AuthService {
-    constructor(private userService: UserService = new UserService()){}
+    constructor(private userService: IUserService = new UserService()){}
 
     async signup(newUser: SignupDTO): Promise<AccessTokenDTO> {
        const user = await this.userService.save({
