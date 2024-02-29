@@ -93,6 +93,7 @@ http://localhost:3000/api-docs/
 - Refactor (Red - Green)
 - Documentation fix
 - Estaría bueno dejar de usar singleton para los controller, ver de abstract factory / factory tal vez uniendolo con el singleton para la construccion de los modulos.
+- Postman (Testing & Env vars)
 - engines support:
 
 ```json
