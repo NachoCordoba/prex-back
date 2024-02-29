@@ -9,6 +9,7 @@ import UpdateAttachmentDTO from "./dto/updateAttachment.dto";
 import { validateOrReject } from "class-validator";
 import HttpGetException from '../../lib/exception/httpGet.exception';
 import HttpDeleteException from '../../lib/exception/httpDelete.exception';
+import { Readable } from "stream";
 
 export default class AttachmentController {
     private static instance: AttachmentController;
@@ -67,6 +68,58 @@ export default class AttachmentController {
         }
         catch(err: any){
             new HttpPostException(err).toHttpResponse(res);
+        }
+    }
+
+    async get(req: Request, res: Response){
+        try{
+            const attachment = await this.attachmentService.findOne({
+                where: {
+                    id: req.params.id,
+                    user: { id: (req['user'] as UserDTO).id }
+                }
+            })
+
+            if(!attachment) throw new AuthorizationException();
+            res.status(HttpStatusCode.OK);
+            res.send(attachment);
+        }
+        catch(err: any){
+            new HttpGetException(err).toHttpResponse(res);
+        }
+    }
+
+    async download(req: Request, res: Response){
+        try{
+            const attachment = await this.attachmentService.findOne({
+                where: {
+                    id: req.params.id,
+                    user: { id: (req['user'] as UserDTO).id }
+                }
+            })
+
+            if(!attachment) throw new AuthorizationException();
+            const file = await this.attachmentService.download(attachment.attachment)
+            
+            if (!file) {
+                res.status(404).send('File not found');
+                return;
+            }
+            
+            res
+                .set("Content-Length", file.ContentLength?.toString())
+                .set("Content-Type",file.ContentType)
+                .set("Content-Disposition", `attachment; filename="${attachment.attachment}"`)
+                .status(HttpStatusCode.OK);
+            
+            const readableStream = new Readable();
+            readableStream._read = () => {};
+            readableStream.push(file.Body);
+            readableStream.push(null);
+            readableStream.pipe(res);
+        }
+        catch(err: any){
+            new HttpGetException(err).toHttpResponse(res);
         }
     }
 

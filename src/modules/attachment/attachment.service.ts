@@ -1,4 +1,3 @@
-import { ListBucketsCommand, S3Client } from "@aws-sdk/client-s3";
 import CommonService from "../../lib/common/common.service";
 import AttachmentEntity from "./attachment.entity";
 import AttachmentRepository from "./attachment.repository";
@@ -6,31 +5,26 @@ import CreateAttachmentDTO from './dto/createAttachment.dto';
 import AttachmentDTO from "./dto/attachment.dto";
 import { SaveOptions } from "typeorm";
 import UpdateAttachmentDTO from "./dto/updateAttachment.dto";
+import FileSystem from "../../lib/fileSystem/fileSystem";
+
 
 export default class AttachmentService extends CommonService<AttachmentEntity> {
-    constructor(private attachmentRepository: AttachmentRepository = new AttachmentRepository){
+    constructor(private attachmentRepository: AttachmentRepository = new AttachmentRepository()){
         super(attachmentRepository);
     }
 
     async upload(file: Express.Multer.File){
         try{
-            const s3 = new S3Client({
-                credentials: {
-                    accessKeyId: String(process.env.AWS_KEY), 
-                    secretAccessKey: String(process.env.AWS_SECRET)
-                },
-                region: process.env.BUCKET_REGION
-            })
-            
-            const params = {
-                Bucket: process.env.BUCKET_NAME,
-                Key: file.originalname,
-                Body: file.buffer,
-            };
-    
-            const command = new ListBucketsCommand(params);
-            await s3.send(command)
-            s3.destroy();
+            await FileSystem.upload({ name: file.originalname, buffer: file.buffer })
+        }
+        catch(err){
+            throw err;
+        }
+    }
+
+    async download(fileName: string){
+        try{
+            return await FileSystem.download(fileName)
         }
         catch(err){
             throw err;
