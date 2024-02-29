@@ -81,6 +81,7 @@ The result of the build will be hosted in the root directory within the "./dist"
 
 ## Postman
 
+Todo: Test - Monitoring
 Workspace: https://www.postman.com/ignacord/workspace/prex
 
 ## API DOC
