@@ -69,6 +69,7 @@ This will run all unit tests with the extension ".spect.ts" located within the "
 To compile the TypeScript code for production, execute the following command:
 <code>npm run build</code>
 The result of the build will be hosted in the root directory within the "./dist" folder.
+<code>npm run start</code> to start the server.
 
 ## Design
 
