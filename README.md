@@ -16,11 +16,47 @@
 - Hot reload
 - Swagger Docs
 
+## Requirements
+
+**Important:**
+The system requires Node.js version > 19.
+
+## Installation
+
+To get started, you'll need to install all the necessary libraries:
+
+```bash
+npm install
+```
+
+## Configuration
+
+To configure the platform, create a `.env` file in the root directory of your project and add the following environment variables. Ensure sensitive information such as passwords and access keys are kept secure and not shared publicly.
+
+```dotenv
+PORT=3000
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=[YourDatabasePassword]
+DATABASE_NAME=prex
+JWT_SECRET=password
+JWT_EXPIRES=365d
+SALT_PASSWORD_ENCRYPT=10
+AWS_KEY=[YourAWSAccessKey]
+AWS_SECRET=[YourAWSSecretKey]
+BUCKET_REGION=sa-east-1
+BUCKET_NAME=prex-challenge-ic
+```
+Replace `[YourDatabasePassword]` with your actual database password, `[YourAWSAccessKey]` with your AWS access key, and `[YourAWSSecretKey]` with your AWS secret key.
+
+Make sure to secure your `.env` file properly and do not commit it to version control systems like Git to avoid exposing sensitive information.
+
 ## Run project
 
 ### Development Mode
 To run the project in development mode, simply use the following command:
-<code>npm run dev</code>
+<code>npm run start:debug</code>
 This command enables us to utilize the Visual Studio debugger and utilize hot reload with nodemon.
 
 ### Testing
