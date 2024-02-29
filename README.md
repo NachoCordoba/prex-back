@@ -89,10 +89,8 @@ http://localhost:3000/api-docs/
 # To Do
 - Typeorm Transactions: Rollback on fail file upload / update / delete
 - Hidden user password with class-transfomer
-- Diagrama del sistema
 - Supertest (E2E Testing)
 - Refactor (Red - Green)
-- Postman env vars
 - Documentation fix
 - Estaría bueno dejar de usar singleton para los controller, ver de abstract factory / factory tal vez uniendolo con el singleton para la construccion de los modulos.
 - engines support:
