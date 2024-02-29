@@ -75,6 +75,9 @@ The result of the build will be hosted in the root directory within the "./dist"
 ### Database design
 ![db_design](https://github.com/NachoCordoba/prex-back/assets/31554015/ac6d9a5f-5142-41c8-b1b8-0eb9b4258913)
 
+### Diagram design
+![diagram](https://github.com/NachoCordoba/prex-back/assets/31554015/11e05b01-a6f4-4df2-87c6-71e7ec5ea51d)
+
 ## Postman
 
 Workspace: https://www.postman.com/ignacord/workspace/prex
