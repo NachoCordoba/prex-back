@@ -4,6 +4,5 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: [
     "<rootDir>/**/*.spec.ts"
-  ],
-  setupFiles: ['<rootDir>/jest.setup.js']
+  ]
 };

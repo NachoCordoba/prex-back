@@ -125,10 +125,13 @@ export default class AttachmentController {
 
     async list(req: Request, res: Response){
         try{
-            const attachmentList = await this.attachmentService.list(Number(req.query.page || 0), { where: [
+            const attachmentList = await this.attachmentService.list({ 
+                where: [
                 { user: { id: (req['user'] as UserDTO).id }},
                 { sharedTo: { id: (req['user'] as UserDTO).id }}
-            ]})
+                ],
+                page: Number(req.query.page)
+            })
 
             res.status(HttpStatusCode.OK)
             res.send(attachmentList)
