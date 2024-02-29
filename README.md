@@ -19,7 +19,7 @@
 ## Requirements
 
 **Important:**
-The system requires Node.js version > 19.
+The system was developed and tested on Node.js version 19.9.0.
 
 ## Installation
 
@@ -83,11 +83,24 @@ Workspace: https://www.postman.com/ignacord/workspace/prex
 http://localhost:3000/api-docs/
 
 # To Do
-- Diagrama del sistema
-- Descargar archivos
 - Unit Testing (Más casos de pruebas)
+- Diagrama del sistema
+- Supertest (E2E Testing)
 - Refactor
 - Postman env vars
 - Documentation fix
 - Estaría bueno dejar de usar singleton para los controller, ver de abstract factory / factory tal vez uniendolo con el singleton para la construccion de los modulos.
 - Inyeccion de dependencia a traves de modulos, deberia modificar los services para que sean inyectables en otros modulos, sin una dependencia directa.
+- engines support:
+
+```json
+  # package.json
+  "engines" : { 
+      "npm" : ">=8.0.0 <9.0.0",
+      "node" : ">=16.0.0 <17.0.0"
+    }
+  ```
+```json
+  # .npmrc
+  engine-strict=true
+```
